@@ -93,8 +93,12 @@ function compileFile($fname, $outFname = null) {
 	require "lessc.inc.php";
 	require "CssMin.php";
 	$less = new lessc;
-	
-	$out = $result = CssMin::minify($less->compile(file_get_contents($fname), $fname));
+	echo $fname;
+	try {
+		$out = $result = CssMin::minify($less->compile(file_get_contents($fname), $fname));
+	} catch (exception $e) {
+		echo "fatal error: " . $e->getMessage();
+	}
 	
 	if ($outFname !== null) {
 		return file_put_contents($outFname, $out);
@@ -111,7 +115,7 @@ function checkedCompile($in, $out) {
 	return false;
 }
 function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
-	#require "lessc.inc.php";
+	require "lessc.inc.php";
 	$unclean = 1;
 	$tree = parser($lessDir, $lessExt, 10, $lessDir);
 	$cleanTree = array();
@@ -124,7 +128,7 @@ function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 		}
 	}
 	$tree = deTree($tree);
-	#$less = new lessc;
+	$less = new lessc;
 	foreach($tree as $file){
 		$cssName = $cssDir . $file['pathname'] . $file['namenotype'] . '.css';
 		$lessName = $lessDir . $file['pathname'] . $file['namenotype'] . '.' . $lessExt;
@@ -133,7 +137,8 @@ function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 			mkdir($cssCDir, 0755, TRUE);
 		}
 		try {
-			checkedCompile($lessName, $cssName);
+			#checkedCompile($lessName, $cssName);
+			$less->checkedCompile($lessName, $cssName);
 		} catch (exception $e) {
 			echo "fatal error: " . $e->getMessage();
 		}
