@@ -133,10 +133,10 @@ if(isset($argv[5])){
 }
 generate($var[1],$var[2],$var[3],$var[4],$var[5]);*/
 
-function genCSS(){
+function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 	require "lessc.inc.php";
 	$unclean = 1;
-	$tree = parser("less/", "less", 10, "less/");
+	$tree = parser($lessDir, $lessExt, 10, $lessDir);
 	$cleanTree = array();
 	while($unclean){
 		if($cleanTree == $tree){
@@ -149,9 +149,9 @@ function genCSS(){
 	$tree = deTree($tree);
 	$less = new lessc;
 	foreach($tree as $file){
-		$cssName = 'css/' . $file['pathname'] . $file['namenotype'] . '.css';
-		$lessName = 'less/' . $file['pathname'] . $file['namenotype'] . '.less';
-		$cssDir = 'css/' . $file['pathname'];
+		$cssName = $cssDir . $file['pathname'] . $file['namenotype'] . '.css';
+		$lessName = $lessDir . $file['pathname'] . $file['namenotype'] . '.' . $lessExt;
+		$cssDir = $cssDir . $file['pathname'];
 		if(!is_dir($cssDir)){
 			mkdir($cssDir, 0755, TRUE);
 		}
