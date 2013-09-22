@@ -101,37 +101,7 @@ function generate($fileName = 'generado.html', $templateDir = 'templates/basic/'
 
 
 
-/*generate('generado.html', 'templates/basic/', basedir, fileType, max_recursive);
-var_dump($argv);
-var_dump($argc);*/
-/*echo('Usage generador.php fileToGenerate routeToTemplate baseDir fileTypeToCatalog maxRecursive');
-$var = array();
-if(isset($argv[1])){
-	$var[1] = $argv[1];
-}else{
-	$var[1] = 'generado.html';
-}
-if(isset($argv[2])){
-	$var[2] = $argv[2];
-}else{
-	$var[2] = 'templates/basic/';
-}
-if(isset($argv[3])){
-	$var[3] = $argv[3];
-}else{
-	$var[3] = basedir;
-}
-if(isset($argv[4])){
-	$var[4] = $argv[4];
-}else{
-	$var[4] = fileType;
-}
-if(isset($argv[5])){
-	$var[5] = $argv[5];
-}else{
-	$var[5] = max_recursive;
-}
-generate($var[1],$var[2],$var[3],$var[4],$var[5]);*/
+
 
 function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 	require "lessc.inc.php";
@@ -159,7 +129,28 @@ function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 	}
 	
 }
+/*generate('less/', 'css/', 'less');
+var_dump($argv);
+var_dump($argc);*/
+echo('Usage less2css.php less/ css/ less' . "\n");
+$var = array();
+if(isset($argv[1])){
+	$var[1] = $argv[1];
+}else{
+	$var[1] = 'less/';
+}
+if(isset($argv[2])){
+	$var[2] = $argv[2];
+}else{
+	$var[2] = 'css/';
+}
+if(isset($argv[3])){
+	$var[3] = $argv[3];
+}else{
+	$var[3] = 'less';
+}
 
+genCSS($var[1],$var[2],$var[3]);
 
-genCSS();
+#genCSS();
 ?>
