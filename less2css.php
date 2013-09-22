@@ -98,12 +98,10 @@ function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 		}
 	}
 	$tree = deTree($tree);
-		print_r($tree);
 	$less = new lessc;
 	foreach($tree as $file){
 		$cssName = $cssDir . $file['pathname'] . $file['namenotype'] . '.css';
 		$lessName = $lessDir . $file['pathname'] . $file['namenotype'] . '.' . $lessExt;
-		echo $cssName . "\n";
 		$cssCDir = $cssDir . $file['pathname'];
 		if(!is_dir($cssCDir)){
 			mkdir($cssCDir, 0755, TRUE);
