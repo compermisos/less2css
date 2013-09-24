@@ -82,38 +82,31 @@ function deTree($tree, &$out = array()){
 	return $out;
 }
 
+function autoCompileLess($inputFile, $outputFile) {
+  // load the cache
+  $cacheFile = $inputFile.".cache";
 
-function compileFile($fname, $outFname = null) {
-	if (!is_readable($fname)) {
-		throw new Exception('load error: failed to find '.$fname);
-	}
-	
-	$pi = pathinfo($fname);
-	
-	require "lessc.inc.php";
-	require "CssMin.php";
-	$less = new lessc;
-	echo $fname;
-	try {
-		$out = $result = CssMin::minify($less->compile(file_get_contents($fname), $fname));
-	} catch (exception $e) {
-		echo "fatal error: " . $e->getMessage();
-	}
-	
-	if ($outFname !== null) {
-		return file_put_contents($outFname, $out);
-	}
-	return $out;
+  if (file_exists($cacheFile)) {
+    $cache = unserialize(file_get_contents($cacheFile));
+  } else {
+    $cache = $inputFile;
+  }
+try {
+			#checkedCompile($lessName, $cssName);
+			$less = new lessc;
+			$less->setFormatter("compressed");
+ 			 $newCache = $less->cachedCompile($cache);
+		} catch (exception $e) {
+			echo "fatal error: " . $e->getMessage();
+		}
+ 
+
+  if (!is_array($cache) || $newCache["updated"] > $cache["updated"]) {
+    file_put_contents($cacheFile, serialize($newCache));
+    file_put_contents($outputFile, $newCache['compiled']);
+  }
 }
 
-// compile only if changed input has changed or output doesn't exist
-function checkedCompile($in, $out) {
-	if (!is_file($out) || filemtime($in) > filemtime($out)) {
-		compileFile($in, $out);
-		return true;
-	}
-	return false;
-}
 function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 	require "lessc.inc.php";
 	$unclean = 1;
@@ -138,7 +131,10 @@ function genCSS($lessDir = 'less/', $cssDir = 'css/', $lessExt = 'less' ){
 		}
 		try {
 			#checkedCompile($lessName, $cssName);
-			$less->checkedCompile($lessName, $cssName);
+			#$less->setFormatter("compressed");
+			#$less->checkedCompile($lessName, $cssName);
+			echo "compiling: " . $lessName . "\n";
+			autoCompileLess($lessName, $cssName);
 		} catch (exception $e) {
 			echo "fatal error: " . $e->getMessage();
 		}
